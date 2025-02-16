@@ -74,7 +74,7 @@
 ---
 
 #### 6. `ui`
-Управление визуальными эффектами:
+Управление отображением плеера:
 - **`isCollapse`** – скрыт ли плеер.
 - **`isClose`** – закрыт ли плеер.
 - **`toggleCollapse()`** – Переключает скрытие/отображение плеера.
@@ -100,7 +100,7 @@
 
 ### Пример использования
 
-1. Layout
+1. Layout / Providers
 
 ```ts
 "use client";
@@ -127,6 +127,8 @@ export const Providers = ({children}:{children:ReactNode}) => {
 
 2. Некий компонент аудио
 ```ts
+import { useMusic } from "virbix";
+
 const CardStorageWrapper: FC<CardStorageWrapperProps> = ({...props}) => {
     const { id, name, url, extension, type, size, created_at, children } = props;
     const description = `${extension} | ${formatFileSize(size, "MB")} | ${timestampFormat(created_at, "Year.Month.Day", false)}`;
