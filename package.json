@@ -1,5 +1,7 @@
 {
   "name": "virbix",
+  "description": "библиотека для воспроизведения аудио в React и NextJS",
+  "homepage": "https://www.npmjs.com/package/virbix",
   "author": {
     "name": "Weierstrass",
     "email": "literteams@gmail.com",
@@ -9,6 +11,17 @@
     "type": "git",
     "url": "https://github.com/LiterTeams/Virbix"
   },
+  "keywords": [
+    "audio",
+    "music",
+    "react",
+    "nextjs",
+    "audio-player",
+    "music-player",
+    "react-player",
+    "nextjs-player",
+    "typescript"
+  ],
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
