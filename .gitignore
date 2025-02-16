@@ -1,0 +1,17 @@
+node_modules
+dist
+package-lock.json
+pnpm-lock.yaml
+.yarn
+.yarnrc.yml
+yarn.lock
+
+
+*.log
+*.cache
+*.DS_Store
+
+*.tsbuildinfo
+
+.vscode/
+.idea/

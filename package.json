@@ -5,6 +5,10 @@
     "email": "literteams@gmail.com",
     "url": "https://github.com/LiterTeams"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LiterTeams/Virbix"
+  },
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
