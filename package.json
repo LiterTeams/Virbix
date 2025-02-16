@@ -1,0 +1,36 @@
+{
+  "name": "virbix",
+  "author": {
+    "name": "Weierstrass",
+    "email": "literteams@gmail.com",
+    "url": "https://github.com/LiterTeams"
+  },
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "packageManager": "yarn@4.6.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "esbuild-plugin-css-modules": "^0.3.0",
+    "eslint": "^9",
+    "postcss": "^8",
+    "prettier": "^3",
+    "react": "^18",
+    "react-dom": "^18",
+    "tsup": "^8.3.6",
+    "typescript": "^5"
+  }
+}
