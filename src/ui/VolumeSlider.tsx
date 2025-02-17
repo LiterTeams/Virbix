@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useRef, useCallback } from "react";
+import { useMusic } from "../hooks";
 
-interface VolumeSliderProps {
-    volume: number;
-    volumeChange: (newVolume: number) => void;
-}
+export const VolumeSlider = () => {
+    const { player, playback } = useMusic();
+    const { volume } = player;
+    const { handleVolumeChange: volumeChange } = playback;
 
-export const VolumeSlider = ({volume, volumeChange }:VolumeSliderProps) => {
     const sliderRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
 
@@ -45,7 +45,7 @@ export const VolumeSlider = ({volume, volumeChange }:VolumeSliderProps) => {
             className="relative btn-ghost overflow-hidden duration-300 h-2 w-24"
             onMouseDown={handleMouseDown}
         >
-            <div className="absolute left-0 h-full bg-white rounded-full" style={{ width: `${volume}%` }}/>
+            <div className="absolute left-0 h-full bg-white rounded-full" style={{ width: `${volume * 100}%` }}/>
         </div>
     );
 }

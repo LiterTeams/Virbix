@@ -1,22 +1,20 @@
 "use client";
 import { FC } from "react";
+import { useMusic } from "../hooks";
 
 import { IcoReport, IcoEffect, IcoRepeat } from "../icons";
 
 import { Button } from "./";
 
-import { PreferenseControlsProps } from "../types";
-
-export const PreferenseControls: FC<PreferenseControlsProps> = ({...props}) => {
-
-    const {
-        isLooped, iconSize = 18, useAmbientMode,
-        toggleLoop, toggleAmbientMode,
-    } = props;
+export const PreferenseControls: FC = () => {
+    const { iconSize, player, playback, vfx } = useMusic();
+    const { isLooped } = player;
+    const { toggleLoop } = playback;
+    const { useAmbientMode, toggleAmbientMode } = vfx;
 
     return(
         <>
-            <div className="flex items-center flex-shrink-0 gap-3">
+            <div className="hidden lg:flex items-center flex-shrink-0 gap-3">
                 <Button onClick={toggleLoop} active={isLooped}>
                     <IcoRepeat size={iconSize} />
                 </Button>

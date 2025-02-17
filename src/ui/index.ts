@@ -12,3 +12,5 @@ export * from "./VolumeSlider";
 export * from "./Audio";
 export * from "./VirbixPlayer";
 export * from "./MusicProvider";
+export * from "./Mobile";
+export * from "./CustomImage";

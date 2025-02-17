@@ -1,11 +1,9 @@
 "use client";
-import { FC, useRef, useEffect, RefObject } from "react";
+import { FC, useRef, useEffect } from "react";
+import { useMusic } from "../hooks";
 
-interface VisualizerProps {
-    audioRef: RefObject<HTMLAudioElement | null>;
-}
-
-export const Visualizer: FC<VisualizerProps> = ({ audioRef }) => {
+export const Visualizer: FC = () => {
+    const { audioRef } = useMusic();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const audioContextRef = useRef<AudioContext | null>(null);
     const analyserRef = useRef<AnalyserNode | null>(null);

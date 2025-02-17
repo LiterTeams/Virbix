@@ -1,17 +1,14 @@
 "use client";
 import { FC } from "react";
-
+import { useMusic } from "../hooks";
 import { Overlay, Visualizer } from "./";
 
-import { OverlayVFXProps } from "../types";
-
-export const OverlayVFX: FC<OverlayVFXProps> = ({...props}) => {
-
-    const { audioRef, useAmbientMode = false } = props;
+export const OverlayVFX: FC = () => {
+    const { useAmbientMode } = useMusic().vfx;
 
     return(
         <Overlay className="pointer-events-none z-[1] p-0">
-            {useAmbientMode && <Visualizer audioRef={audioRef} />}
+            {useAmbientMode && <Visualizer />}
         </Overlay>
     )
 }

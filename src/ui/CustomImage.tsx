@@ -1,23 +1,42 @@
 "use client";
-import { FC, ImgHTMLAttributes, useMemo } from "react";
+import { FC, useState, useEffect } from "react";
 
-const NextImage = (() => {
-  try {
-    return require("next/image").default;
-  } catch (error) {
-    return null;
-  }
-})();
-
-interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  layout?: "intrinsic" | "fixed" | "responsive" | "fill";
+interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+    useNextImage?: boolean;
+    fill?: boolean;
+    quality?: number;
 }
 
-export const CustomImage: FC<ImageProps> = ({ src, alt, ...props }) => {
-  const ImageComponent = useMemo(() => NextImage || "img", []);
-  return <ImageComponent src={src} alt={alt} {...props} />;
+let NextImage: any = null;
+if (typeof window === "undefined") {
+    try {
+        NextImage = require("next/image").default;
+    } catch (error) {
+        NextImage = null;
+    }
+}
+
+export const CustomImage: FC<CustomImageProps> = ({
+    useNextImage = !!NextImage,
+    fill = false,
+    quality = 75,
+    ...props
+}) => {
+    const [isNextAvailable, setIsNextAvailable] = useState(!!NextImage);
+
+    useEffect(() => {
+        if (!NextImage) {
+            try {
+                NextImage = require("next/image").default;
+                setIsNextAvailable(true);
+            } catch {
+                setIsNextAvailable(false);
+            }
+        }
+    }, []);
+
+    if (isNextAvailable && useNextImage) {
+        return <NextImage quality={quality} fill={fill} {...props} />;
+    }
+    return <img {...props} />;
 };

@@ -1,12 +1,11 @@
 "use client";
 import { FC } from "react";
+import { useMusic } from "../hooks";
 
-import { AudioProps } from "../types";
-
-export const Audio: FC<AudioProps> = ({...props}) => {
-
-    const { audioRef, isLooped, isMuted, source, preload } = props;
-    const { handleLoadedMetadata, handleTimeUpdate, handleError } = props;
+export const Audio: FC = () => {
+    const { audioRef, player, playback } = useMusic();
+    const { source, isLooped, isMuted, handleError } = player;
+    const { handleTimeUpdate, handleLoadedMetadata } = playback;
 
     return(
         <audio
@@ -17,7 +16,7 @@ export const Audio: FC<AudioProps> = ({...props}) => {
             crossOrigin="use-credentials"
             loop={isLooped}
             muted={isMuted}
-            preload={preload}
+            preload="auto"
             hidden
         >
             {source && typeof source == "object"
