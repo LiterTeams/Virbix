@@ -1,12 +1,12 @@
 "use client";
-import { TrackInfoProps } from "../types";
-
-import { UsePlayerPlaybackProps } from "../types";
+import { useCallback } from "react";
+import { TrackInfoProps, UsePlayerPlaybackProps } from "../types";
 
 export const usePlayerPlayback = ({
-    audioRef,isError,isLooped,isMuted,totalTime,source,volume,isClose,
-    startAnimation,stopAnimation,skipTime,updateTrackInfo,
-    setPlayerState, toggleClose,
+    audioRef,isError,isLooped,isMuted,totalTime,
+    volume,isClose,track,trackList,
+    startAnimation,stopAnimation,timeSkip,
+    setPlayerState, toggleClose, setTrackList,
 }:UsePlayerPlaybackProps) => {
 
     const withAudioRef = <T extends (this: HTMLAudioElement, ...args: Parameters<T>) => ReturnType<T>>(fn: T) => {
@@ -28,8 +28,8 @@ export const usePlayerPlayback = ({
         setPlayerState({ totalTime: this.duration, isLoading: false });
     });
 
-    const handleForwardSkip = () => skipTime("forward");
-    const handleBackwardSkip = () => skipTime("backward");
+    const handleForwardSkip = () => timeSkip("forward");
+    const handleBackwardSkip = () => timeSkip("backward");
     const toggleMute = () => setPlayerState({isMuted: !isMuted});
     const toggleLoop = () => setPlayerState({isLooped: !isLooped});
 
@@ -46,22 +46,31 @@ export const usePlayerPlayback = ({
         stopAnimation();
     });
 
-    const setAudioSrc = withAudioRef(async function (url: string, trackInfo?: TrackInfoProps): Promise<void> {
+    const setAudioSrc = withAudioRef(async function (url: string, trackInfo: TrackInfoProps = { name: "Unknown" }): Promise<void> {
         if (!url) return;
+    
         this.src = url;
         this.load();
         this.volume = volume;
-        setPlayerState({source: url});
-        if (trackInfo) updateTrackInfo(trackInfo);
-        setPlayerState({isLoading: true});
-        this.onloadedmetadata = () => {
-            setPlayerState({totalTime: audioRef.current!.duration, isLoading: false});
+        const newTrack = { source: url, info: trackInfo };
+        
+        setPlayerState({
+            track: newTrack,
+            isLoading: true
+        });
+    
+        if (!trackList.some(trackItem => trackItem.source === newTrack.source)){
+            setTrackList(prev => [...prev, newTrack]);
+        }
+    
+        this.addEventListener("loadedmetadata", () => {
+            setPlayerState({ totalTime: this.duration, isLoading: false });
             handlePlay();
-        };
+        }, { once: true });
     });
 
     const handleTogglePlay = withAudioRef(function (url?: string, trackInfo?: TrackInfoProps) {
-        if (url && (!source || source !== url)) {
+        if (url && (!track || track.source !== url)) {
             setAudioSrc(url, trackInfo);
             return;
         }
@@ -76,6 +85,7 @@ export const usePlayerPlayback = ({
         if (isError) return;
         setPlayerState({ isPlaying: false, isEnded: true });
         stopAnimation();
+        handleNextTrack();
     };
 
     const handleRepeat = () => {
@@ -83,6 +93,14 @@ export const usePlayerPlayback = ({
         audioRef.current.currentTime = 0;
         handlePlay();
     };
+
+    const handleShuffleTrackList = useCallback(() => {
+        if (trackList.length <= 1 || !track) return;
+        setTrackList((prev) => {
+            const shuffledList = prev.filter(trackItem => trackItem.source !== track.source).sort(() => Math.random() - 0.5);
+            return [track, ...shuffledList];
+        });
+    },[setTrackList, track, trackList.length]);
 
     const handleVolumeChange = withAudioRef(function (newVolume: number) {
         setPlayerState({volume: newVolume});
@@ -93,6 +111,20 @@ export const usePlayerPlayback = ({
         handlePause();
         toggleClose();
     });
+
+    const changeTrack = useCallback((direction: 1 | -1) => {
+        if (!track || trackList.length <= 1) return;
+    
+        const currentIndex = trackList.findIndex((trackItem) => trackItem.source === track.source);
+        if (currentIndex === -1) return;
+    
+        const trackIndex = (currentIndex + direction + trackList.length) % trackList.length;
+        const newTrack = trackList[trackIndex];
+        setAudioSrc(newTrack.source, newTrack.info);
+    },[setAudioSrc, track, trackList]);
+
+    const handleNextTrack = useCallback(() => changeTrack(+1),[changeTrack]);
+    const handlePrevTrack = useCallback(() => changeTrack(-1),[changeTrack]);
 
     const onSeek = withAudioRef(function (time: number) {
         this.currentTime = time;
@@ -107,6 +139,9 @@ export const usePlayerPlayback = ({
         handleBackwardSkip,
         handleVolumeChange,
         handleToggleClose,
+        handleNextTrack,
+        handlePrevTrack,
+        handleShuffleTrackList,
         toggleMute,
         toggleLoop,
         onSeek,

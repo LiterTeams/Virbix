@@ -1,29 +1,21 @@
 "use client";
-import { FC } from "react";
 import { useMusic } from "../hooks";
 
-export const Audio: FC = () => {
-    const { audioRef, player, playback } = useMusic();
-    const { source, isLooped, isMuted, handleError } = player;
-    const { handleTimeUpdate, handleLoadedMetadata } = playback;
-
+export const Audio = () => {
+    const { audioRef, crossOrigin, player: { track, isLooped, isMuted, handleError }, playback: { handleTimeUpdate, handleLoadedMetadata } } = useMusic();
     return(
         <audio
+            ref={audioRef}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
-            onError={(event) => handleError(event)}
-            ref={audioRef}
-            crossOrigin="use-credentials"
+            onError={handleError}
+            crossOrigin={crossOrigin}
             loop={isLooped}
             muted={isMuted}
             preload="auto"
             hidden
         >
-            {source && typeof source == "object"
-            ? <source src={source.src} type={`audio/${source.mimetype}`} />
-            : <source src={source || undefined} />
-            }
+            {track && <source key={track.source} src={track.source || undefined} />}
         </audio>
     )
-
 }

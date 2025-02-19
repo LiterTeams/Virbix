@@ -1,12 +1,12 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, MouseEvent } from "react";
 
 import { parseTime } from "../helpers";
 
 import { UseTimelineProps } from "../types";
 
-export const useTimeline = ({ audioRef, timeSkip = "15s" }: UseTimelineProps) => {
-    const skip = parseTime(timeSkip);
+export const useTimeline = ({ audioRef, skipTime = "15s", totalTime }: UseTimelineProps) => {
+    const skip = parseTime(skipTime);
     const [progress, setProgress] = useState(0);
     const animationRef = useRef<number | null>(null);
 
@@ -27,7 +27,7 @@ export const useTimeline = ({ audioRef, timeSkip = "15s" }: UseTimelineProps) =>
         if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
 
-    const skipTime = (direction: "forward" | "backward") => {
+    const timeSkip = (direction: "forward" | "backward") => {
         if (!audioRef.current) return;
         const currentTime = audioRef.current.currentTime;
         const currentDuration = audioRef.current.duration;
@@ -35,9 +35,18 @@ export const useTimeline = ({ audioRef, timeSkip = "15s" }: UseTimelineProps) =>
         audioRef.current.currentTime = Math.max(0, Math.min(currentDuration, newTime));
     };
 
+    const handleManualRewind = (event: MouseEvent<HTMLDivElement>) => {
+        if (totalTime <= 0 || !audioRef.current) return;
+        const timeline = event.currentTarget;
+        const rect = timeline.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const newTime = (offsetX / rect.width) * totalTime;
+        audioRef.current.currentTime = newTime;
+    };
+
     useEffect(() => {
         return () => stopAnimation();
     }, []);
 
-    return { progress, startAnimation, stopAnimation, skipTime };
+    return { progress, startAnimation, stopAnimation, timeSkip, handleManualRewind };
 };

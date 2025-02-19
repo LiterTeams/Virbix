@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, MouseEvent } from "react";
 import { useMusic } from "../hooks";
 
 export const VolumeSlider = () => {
@@ -17,15 +17,14 @@ export const VolumeSlider = () => {
         volumeChange(Math.max(0, Math.min(1, newVolume)));
     },[volumeChange]);
 
-    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         isDragging.current = true;
-        handleVolumeChange(e.clientX);
+        handleVolumeChange(event.clientX);
     };
     
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-        if (isDragging.current) {
-            handleVolumeChange(e.clientX);
-        }
+    const handleMouseMove = useCallback((event: globalThis.MouseEvent) => {
+        if (!isDragging.current) return;
+        handleVolumeChange(event.clientX);
     },[handleVolumeChange]);
 
     const handleMouseUp = () => isDragging.current = false;
@@ -40,11 +39,7 @@ export const VolumeSlider = () => {
     }, [handleMouseMove]);
 
     return (
-        <div
-            ref={sliderRef}
-            className="relative btn-ghost overflow-hidden duration-300 h-2 w-24"
-            onMouseDown={handleMouseDown}
-        >
+        <div ref={sliderRef} onMouseDown={handleMouseDown} className="relative btn-ghost overflow-hidden duration-300 h-2 w-24">
             <div className="absolute left-0 h-full bg-white rounded-full" style={{ width: `${volume * 100}%` }}/>
         </div>
     );

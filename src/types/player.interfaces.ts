@@ -20,10 +20,6 @@ export interface TrackProps {
     source: string;
     info: TrackInfoProps;
 }
-export interface SourceProps {
-    src: string;
-    mimetype: string;
-}
 export interface OverlayProps {
     className?: string;
     children?: ReactNode;

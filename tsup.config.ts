@@ -5,5 +5,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   dts: true,
   clean: true,
+  minify: true,
+  splitting: false,
   external: ["react", "react-dom", "tailwindcss"],
 });

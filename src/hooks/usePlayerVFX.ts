@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { UsePlayerVFXProps } from "../types";
 
@@ -7,7 +7,7 @@ export const usePlayerVFX = ({ ambientMode = false }: UsePlayerVFXProps = {}) =>
 
     const [useAmbientMode, setAmbientMode] = useState(ambientMode);
 
-    const toggleAmbientMode = () => setAmbientMode(prev => !prev);
+    const toggleAmbientMode = useCallback(() => setAmbientMode(prev => !prev),[]);
 
     return {
         useAmbientMode, toggleAmbientMode,

@@ -6,11 +6,11 @@ import { OverlayVFX, Controls, Audio, TrackDetails, Button } from ".";
 
 export const VirbixPlayer: FC = () => {
     const { player, playback, ui } = useMusic();
-    const { source } = player;
+    const { track } = player;
     const { isCollapse, isClose, toggleCollapse } = ui;
     const { handleToggleClose } = playback;
 
-    const className = `fixed duration-300 flex items-center z-10 right-0 bottom-0 min-h-24 w-full backdrop-blur-sm border-t border-white/15 p-2 xl:p-6 ${isCollapse ? "translate-y-64" : "translate-y-0"} ${!source || isClose ? "opacity-0 pointer-events-none" : "opacity-100"}`
+    const className = `fixed duration-300 flex items-center z-10 right-0 bottom-0 min-h-24 w-full backdrop-blur-sm border-t border-white/15 p-2 xl:p-6 ${isCollapse ? "translate-y-64" : "translate-y-0"} ${!track || isClose ? "opacity-0 pointer-events-none" : "opacity-100"}`
 
     return (
         <div className={className}>

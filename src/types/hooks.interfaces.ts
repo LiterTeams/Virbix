@@ -1,8 +1,8 @@
-import { RefObject } from "react";
-import { TrackInfoProps, TrackProps } from "./";
+import { Dispatch, RefObject, SetStateAction } from "react";
+import { TrackProps } from "./";
 
-interface UsePlayerStateProps {
-    source: string | null;
+export interface UsePlayerStateProps {
+    track: TrackProps | null;
     error: string | null;
     volume: number;
     currentTime: number;
@@ -15,31 +15,46 @@ interface UsePlayerStateProps {
     isMuted: boolean;
 }
 
-interface UsePlayerProps {
+export interface UsePlayerProps {
     loop?: boolean;
     mute?: boolean;
     volume?: number;
     tracks?: TrackProps[];
 }
 
-interface UsePlayerVFXProps {
+export interface UsePlayerVFXProps {
     ambientMode?: boolean;
 }
 
-interface UseTimelineProps {
+export interface UseTimelineProps extends Pick<UsePlayerStateProps, "totalTime"> {
     audioRef: RefObject<HTMLAudioElement | null>;
-    timeSkip?: string;
+    skipTime?: string;
 }
 
-interface UsePlayerPlaybackProps extends Pick<UsePlayerStateProps, "source"|"isError"|"isLooped"|"isMuted"|"totalTime"|"volume"> {
+export interface UsePlayerPlaybackProps extends Pick<UsePlayerStateProps, "track"|"isError"|"isLooped"|"isMuted"|"totalTime"|"volume"> {
     audioRef: RefObject<HTMLAudioElement | null>;
     isClose: boolean;
+    trackList: TrackProps[];
     setPlayerState: (state: Partial<UsePlayerStateProps>) => void; 
-    updateTrackInfo: (trackDataInfo: TrackInfoProps) => void;
     startAnimation: () => void;
     stopAnimation: () => void;
     toggleClose: () => void;
-    skipTime: (direction: "forward" | "backward") => void;
+    setTrackList: Dispatch<SetStateAction<TrackProps[]>>; 
+    timeSkip: (direction: "forward" | "backward") => void;
 }
 
-export type { UsePlayerStateProps, UsePlayerProps, UsePlayerVFXProps, UseTimelineProps, UsePlayerPlaybackProps }
+export interface UseAudioShortcutsProps extends Pick<UsePlayerStateProps, "volume"> {
+    handleForwardSkip: () => void;
+    handleBackwardSkip: () => void;
+    toggleMute: () => void;
+    toggleLoop: () => void;
+    handleTogglePlay: () => void;
+    handleRepeat: () => void;
+    handleToggleClose: () => void;
+    toggleCollapse: () => void;
+    handleNextTrack: () => void;
+    handlePrevTrack: () => void;
+    handleShuffleTrackList: () => void;
+    toggleAmbientMode: () => void;
+    handleVolumeChange: (newVolume: number) => void;
+}
